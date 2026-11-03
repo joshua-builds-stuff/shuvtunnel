@@ -20,13 +20,13 @@ jobs:
     outputs:
       mode: ${{ steps.changesets.outputs.mode }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.4.2
       - run: bun install --frozen-lockfile
       - id: changesets
-        uses: changesets/action/select-mode@v2
+        uses: changesets/action/select-mode@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2
 
   version:
     name: Version packages
@@ -37,12 +37,12 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.4.2
       - run: bun install --frozen-lockfile
-      - uses: changesets/action/version@v2
+      - uses: changesets/action/version@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2
         with:
           script: bun run version
           pr-title: Release packages
@@ -72,8 +72,8 @@ jobs:
             target: aarch64-apple-darwin
             runner: macos-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
           targets: ${{ matrix.target }}
       - if: runner.os == 'Linux'
@@ -81,7 +81,7 @@ jobs:
       - run: |
           cargo build --release --locked -p shuvtunnel-cli --target ${{ matrix.target }}
           mkdir -p out/bin && cp target/${{ matrix.target }}/release/shuvtunnel out/bin/
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: cli-${{ matrix.platform }}
           path: out
@@ -100,23 +100,23 @@ jobs:
       AUR_KEY: ${{ secrets.AUR_KEY }}
       HOMEBREW_TAP_KEY: ${{ secrets.HOMEBREW_TAP_KEY }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
       - run: npm install --global npm@12.0.2
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
       # crates.io trusted publishing: a short-lived token for this run's cargo publish.
       - id: crates
-        uses: rust-lang/crates-io-auth-action@v1
-      - uses: oven-sh/setup-bun@v2
+        uses: rust-lang/crates-io-auth-action@3268eb413133e2960fa4ae0e963ca76380c54cd9 # v1
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.4.2
       - run: bun install --frozen-lockfile
       - run: bun run ready
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           pattern: cli-*
           path: artifacts
@@ -142,7 +142,7 @@ jobs:
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           git config --global user.name "shuvtunnel"
           git config --global user.email "shuv@shuv.dev"
-      - uses: changesets/action/publish@v2
+      - uses: changesets/action/publish@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2
         with:
           script: bun run release
         env:
